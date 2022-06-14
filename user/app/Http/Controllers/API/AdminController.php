@@ -140,6 +140,10 @@ class AdminController extends Controller
                         'student_id' => $request->student_id,
                         'teacher_id' => $request->teacher_id,
                     ]);
+                    $notification = Http::post($this->notification_url . '/api/notification/real-time-notification2', [
+                        'student_id' => $request->student_id,
+                        'teacher_id' => $request->teacher_id,
+                    ]);
                     return Response::json($response);
                 }
             } else {
@@ -189,6 +193,9 @@ class AdminController extends Controller
                     'title' => $details['title'],
                     'name' => $details['name'],
                     'message' => $details['message'],
+                    'user_id' => $user->id,
+                ]);
+                $notification = Http::post($this->notification_url . '/api/notification/real-time-notification', [
                     'user_id' => $user->id,
                 ]);
                 return Response::json($response);

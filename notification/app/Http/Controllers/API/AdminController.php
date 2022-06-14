@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\MyEvent;
 use App\Http\Controllers\Controller;
 use App\Mail\UserApprovedMail;
 use App\Models\User;
@@ -38,5 +39,21 @@ class AdminController extends Controller
         $admin = User::where('role_id', 1)->select('email')->first();
         $details = $unapproved_users;
         Mail::to($admin->email)->send(new \App\Mail\UnapprovedUsersMail($details));
+    }
+    public function real_time_notification(Request $request)
+    {
+        $id = $request->user_id;
+        $user = User::find($id);
+        $message = $user->name . ' account has been approved';
+        event(new MyEvent($message));
+    }
+    public function real_time_notification2(Request $request)
+    {
+        $student_id = $request->student_id;
+        $teacher_id = $request->teacher_id;
+        $student = User::find($student_id);
+        $teacher = User::find($teacher_id);
+        $message = $teacher->name . ' has been assigned to ' . $student->name;
+        event(new MyEvent($message));
     }
 }
